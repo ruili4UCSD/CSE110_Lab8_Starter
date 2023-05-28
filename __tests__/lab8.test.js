@@ -117,6 +117,9 @@ describe('Basic user flow for Website', () => {
     // TODO - Step 5
     // At this point he item 'cart' in localStorage should be 
     // '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]', check to make sure it is
+    const cart = await page.evaluate(() => localStorage.getItem('cart'));
+    const expectedCart = JSON.stringify([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+    expect(cart).toBe(expectedCart);
   });
 
   // Checking to make sure that if you remove all of the items from the cart that the cart
@@ -126,6 +129,18 @@ describe('Basic user flow for Website', () => {
     // TODO - Step 6
     // Go through and click "Remove from Cart" on every single <product-item>, just like above.
     // Once you have, check to make sure that #cart-count is now 0
+
+    // Query select all of the <product-item> elements
+    const productItems = await page.$$('product-item');
+    for (let productItem of productItems) {
+      const shadowRoot = await page.evaluateHandle(el => el.shadowRoot, productItem);
+      const button = await shadowRoot.$('button');
+      await button.click();
+    }
+    const cartCount = await page.$eval('#cart-count', el => el.innerText);
+
+    // Check to make sure that #cart-count is now 0
+    expect(cartCount).toBe("0");
   }, 10000);
 
   // Checking to make sure that it remembers us removing everything from the cart
