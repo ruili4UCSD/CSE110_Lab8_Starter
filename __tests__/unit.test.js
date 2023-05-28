@@ -34,3 +34,50 @@ test('incorrect email # 3', () => {
 test('incorrect email # 4', () => {
     expect(isEmail('a')).toBe(false);
 });
+
+
+// password test
+test('Strong password # 1', () => {
+    expect(isStrongPassword('Waaa111___')).toBe(true);
+});
+test('Strong password # 2', () => {
+    expect(isStrongPassword('waaa111111')).toBe(true);
+});
+test('Weak password # 3', () => {
+    expect(isStrongPassword('w')).toBe(false);
+});
+test('SWeak password # 4', () => {
+    expect(isStrongPassword('?????')).toBe(false);
+});
+
+
+// Date test
+test('correct date # 1', () => {
+    expect(isDate('11/11/1111')).toBe(true);
+});
+test('correct date # 2', () => {
+    expect(isDate('1/1/1111')).toBe(true);
+});
+test('incorrect date # 3', () => {
+    expect(isDate('1/1/1')).toBe(false);
+});
+test('incorrect date # 4', () => {
+    expect(isDate('?????')).toBe(false);
+});
+
+
+// Color test
+test('correct color # 1', () => {
+    expect(isHexColor('#F00')).toBe(true);
+    expect(isHexColor('#fff')).toBe(true);
+    expect(isHexColor('#FFFFFF')).toBe(true);
+});
+test('correct color # 2', () => {
+    expect(isHexColor('#000000')).toBe(true);
+});
+test('incorrect color # 3', () => {
+    expect(isHexColor('F000')).toBe(false);
+});
+test('incorrect color # 4', () => {
+    expect(isHexColor('#0000000')).toBe(false);
+});
