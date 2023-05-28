@@ -130,6 +130,8 @@ describe('Basic user flow for Website', () => {
     // Go through and click "Remove from Cart" on every single <product-item>, just like above.
     // Once you have, check to make sure that #cart-count is now 0
 
+    // Donlt know why, if I just simplified modify step3, step 4 gonna have an error
+
     // Query select all of the <product-item> elements
     const productItems = await page.$$('product-item');
     for (let productItem of productItems) {
@@ -151,6 +153,29 @@ describe('Basic user flow for Website', () => {
     // Reload the page once more, then go through each <product-item> to make sure that it has remembered nothing
     // is in the cart - do this by checking the text on the buttons so that they should say "Add to Cart".
     // Also check to make sure that #cart-count is still 0
+    
+    // 简单修改Step4
+    await page.reload();
+    const productItems = await page.$$('product-item');
+    let AllAdded = true;
+    for (const productItem of productItems) {
+      const shadowRoot = await page.evaluateHandle(el => el.shadowRoot, productItem);
+      const buttonHandle = await shadowRoot.$('button');
+      const buttonText = await page.evaluate(el => el.innerText, buttonHandle);
+
+      if (buttonText === 'Remove from Cart') {
+          AllAdded = false;
+          break;
+      }
+    }
+    // Also check to make sure that #cart-count is still 20
+    const cart = await page.$('#cart-count');
+    const cartCount = await page.evaluate(el => el.innerText, cart);
+    
+    expect(AllAdded).toBe(true);
+    expect(cartCount).toBe('0');
+
+
   }, 10000);
 
   // Checking to make sure that localStorage for the cart is as we'd expect for the
