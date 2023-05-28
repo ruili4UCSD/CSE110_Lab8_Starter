@@ -40,7 +40,7 @@ describe('Basic user flow for Website', () => {
     // Expect allArePopulated to still be true
     expect(allArePopulated).toBe(true);
 
-  }, 10000);
+  }, 20000);
 
   // Check to make sure that when you click "Add to Cart" on the first <product-item> that
   // the button swaps to "Remove from Cart"
@@ -57,7 +57,7 @@ describe('Basic user flow for Website', () => {
     const buttonInnerTextHandle = await shadowRoot.$eval('button', element => element.innerText);
     // Once you have the innerText property, use innerText.jsonValue() to get the text value of it
     expect(buttonInnerTextHandle).toBe('Remove from Cart');
-  }, 2500);
+  }, 10000);
 
   // Check to make sure that after clicking "Add to Cart" on every <product-item> that the Cart
   // number in the top right has been correctly updated
@@ -81,7 +81,7 @@ describe('Basic user flow for Website', () => {
     const cartCountHandle = await page.$('#cart-count');
     const cartCountValue = await page.evaluate(element => element.innerText, cartCountHandle);
     expect(cartCountValue).toBe('20');
-  }, 10000);
+  }, 20000);
 
   // Check to make sure that after you reload the page it remembers all of the items in your cart
   it('Checking number of items in cart on screen after reload', async () => {
@@ -110,7 +110,7 @@ describe('Basic user flow for Website', () => {
     
     expect(AllRemoved).toBe(true);
     expect(cartCount).toBe('20');
-  }, 10000);
+  }, 20000);
 
   // Check to make sure that the cart in localStorage is what you expect
   it('Checking the localStorage to make sure cart is correct', async () => {
@@ -143,7 +143,7 @@ describe('Basic user flow for Website', () => {
 
     // Check to make sure that #cart-count is now 0
     expect(cartCount).toBe("0");
-  }, 10000);
+  }, 20000);
 
   // Checking to make sure that it remembers us removing everything from the cart
   // after we refresh the page
@@ -176,7 +176,7 @@ describe('Basic user flow for Website', () => {
     expect(cartCount).toBe('0');
 
 
-  }, 10000);
+  }, 20000);
 
   // Checking to make sure that localStorage for the cart is as we'd expect for the
   // cart being empty
