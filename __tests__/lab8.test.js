@@ -40,10 +40,6 @@ describe('Basic user flow for Website', () => {
     // Expect allArePopulated to still be true
     expect(allArePopulated).toBe(true);
 
-    // TODO - Step 1
-    // Right now this function is only checking the first <product-item> it found, make it so that
-    // it checks every <product-item> it found
-
   }, 10000);
 
   // Check to make sure that when you click "Add to Cart" on the first <product-item> that
@@ -52,9 +48,15 @@ describe('Basic user flow for Website', () => {
     console.log('Checking the "Add to Cart" button...');
     // TODO - Step 2
     // Query a <product-item> element using puppeteer ( checkout page.$() and page.$$() in the docs )
+    const productItem = await page.$('product-item');
     // Grab the shadowRoot of that element (it's a property), then query a button from that shadowRoot.
+    const shadowRoot = await page.evaluateHandle(element => element.shadowRoot, productItem);
+    const button = await shadowRoot.$('button');
     // Once you have the button, you can click it and check the innerText property of the button.
+    await button.click();
+    const buttonInnerTextHandle = await shadowRoot.$eval('button', element => element.innerText);
     // Once you have the innerText property, use innerText.jsonValue() to get the text value of it
+    expect(buttonInnerTextHandle).toBe('Remove from Cart');
   }, 2500);
 
   // Check to make sure that after clicking "Add to Cart" on every <product-item> that the Cart
@@ -63,8 +65,22 @@ describe('Basic user flow for Website', () => {
     console.log('Checking number of items in cart on screen...');
     // TODO - Step 3
     // Query select all of the <product-item> elements, then for every single product element
+    const productItems = await page.$$('product-item');
     // get the shadowRoot and query select the button inside, and click on it.
+    // In step 2, we added the first product to cart
+    // So now, we only add the product that has not been added to cart to cart
+    for (let productItem of productItems) {
+      let shadowRoot = await page.evaluateHandle(element => element.shadowRoot, productItem);
+      let button = await shadowRoot.$('button');
+      const buttonText = await page.evaluate(el => el.innerText, button);
+      if (buttonText === 'Add to Cart') {
+        await button.click();
+      }
+    }
     // Check to see if the innerText of #cart-count is 20
+    const cartCountHandle = await page.$('#cart-count');
+    const cartCountValue = await page.evaluate(element => element.innerText, cartCountHandle);
+    expect(cartCountValue).toBe('20');
   }, 10000);
 
   // Check to make sure that after you reload the page it remembers all of the items in your cart
